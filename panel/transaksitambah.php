@@ -2,7 +2,7 @@
 if (isset($_POST['simpan'])) {
     $id_pelanggan = $_POST['id_pelanggan'];
     $id_user = $_SESSION['user']['id_user'];
-    $id_jenis_layanan = $_POST['id_jenis_layanan'];
+    $id_jns_layanan = $_POST['id_jns_layanan'];
     $tgl_transaksi = date('Y-m-d H:i:s');
     $tgl_mulai = date('Y-m-d');
     $tgl_selesai = $_POST['tgl_selesai'];
@@ -20,8 +20,8 @@ if (isset($_POST['simpan'])) {
     $stok_gagal = false;
     $barang_kurang = [];
 
-    $id_jenis_layanan = $_POST['id_jenis_layanan'];
-    $q_jenis = mysqli_query($koneksi, "SELECT jenis_layanan FROM jenis_layanan WHERE id_jns_layanan = '$id_jenis_layanan'");
+    $id_jns_layanan = $_POST['id_jns_layanan'];
+    $q_jenis = mysqli_query($koneksi, "SELECT jenis_layanan FROM jenis_layanan WHERE id_jns_layanan = '$id_jns_layanan'");
     $data_jenis = mysqli_fetch_assoc($q_jenis);
     $jenis_layanan_nama = $data_jenis['jenis_layanan'];
 
@@ -58,8 +58,8 @@ if (isset($_POST['simpan'])) {
 
         // Simpan transaksi
         $simpan = mysqli_query($koneksi, "INSERT INTO transaksi 
-        (id_pelanggan, id_user, id_jenis_layanan, status_bayar, status_ambil, tgl_transaksi, tgl_mulai, tgl_selesai, antar_jemput, alamat_jemput, invoice, berat, total, metode_bayar, bukti) 
-        VALUES ('$id_pelanggan', '$id_user', '$id_jenis_layanan', '$status_bayar', '$status_ambil', '$tgl_transaksi', '$tgl_mulai', '$tgl_selesai', '$antar_jemput', '$alamat_jemput', '$invoice', '$berat', '$total', '$metode_bayar', '$bukti')
+        (id_pelanggan, id_user, id_jns_layanan, status_bayar, status_ambil, tgl_transaksi, tgl_mulai, tgl_selesai, antar_jemput, alamat_jemput, invoice, berat, total, metode_bayar, bukti) 
+        VALUES ('$id_pelanggan', '$id_user', '$id_jns_layanan', '$status_bayar', '$status_ambil', '$tgl_transaksi', '$tgl_mulai', '$tgl_selesai', '$antar_jemput', '$alamat_jemput', '$invoice', '$berat', '$total', '$metode_bayar', '$bukti')
     ");
 
         if ($simpan) {
@@ -173,7 +173,7 @@ if (isset($_POST['simpan'])) {
 
                                 <div class="form-group">
                                     <label>Jenis Layanan</label>
-                                    <select name="id_jenis_layanan" id="jenis_layanan" class="form-control" required></select>
+                                    <select name="id_jns_layanan" id="jenis_layanan" class="form-control" required></select>
                                 </div>
 
                                 <div class="form-group">

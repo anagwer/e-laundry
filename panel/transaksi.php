@@ -44,8 +44,8 @@
                             SELECT t.*, p.nm_pelanggan, l.nm_layanan, j.jenis_layanan
                             FROM transaksi t
                             LEFT JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
-                            LEFT JOIN kategori_layanan l ON t.id_jenis_layanan = l.id_kategori_layanan
-                            LEFT JOIN jenis_layanan j ON t.id_jenis_layanan = j.id_jns_layanan
+                            LEFT JOIN kategori_layanan l ON t.id_jns_layanan = l.id_kategori_layanan
+                            LEFT JOIN jenis_layanan j ON t.id_jns_layanan = j.id_jns_layanan
                             ORDER BY t.id_transaksi DESC
                         ");
                         } else {
@@ -57,8 +57,8 @@
                             SELECT t.*, p.nm_pelanggan, l.nm_layanan, j.jenis_layanan
                             FROM transaksi t
                             LEFT JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
-                            LEFT JOIN kategori_layanan l ON t.id_jenis_layanan = l.id_kategori_layanan
-                            LEFT JOIN jenis_layanan j ON t.id_jenis_layanan = j.id_jns_layanan
+                            LEFT JOIN kategori_layanan l ON t.id_jns_layanan = l.id_kategori_layanan
+                            LEFT JOIN jenis_layanan j ON t.id_jns_layanan = j.id_jns_layanan
                             WHERE t.id_pelanggan = '$idpelanggan'
                             ORDER BY t.id_transaksi DESC
                         ");

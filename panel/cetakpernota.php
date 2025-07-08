@@ -11,7 +11,7 @@ $query = mysqli_query($koneksi, "
     SELECT t.*, p.nm_pelanggan, j.jenis_layanan, j.tarif
     FROM transaksi t
     LEFT JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
-    LEFT JOIN jenis_layanan j ON t.id_jenis_layanan = j.id_jns_layanan
+    LEFT JOIN jenis_layanan j ON t.id_jns_layanan = j.id_jns_layanan
     WHERE DATE(t.tgl_transaksi) = '$tanggal'
     ORDER BY t.tgl_transaksi ASC
 ");

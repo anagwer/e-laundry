@@ -18,7 +18,7 @@ if (isset($_POST['update'])) {
     $id_transaksi = $_POST['id_transaksi'];
     $id_pelanggan = $_POST['id_pelanggan'];
     $id_user = $_SESSION['user']['id_user'];
-    $id_jenis_layanan = $_POST['id_jenis_layanan'];
+    $id_jns_layanan = $_POST['id_jns_layanan'];
     $tgl_selesai = $_POST['tgl_selesai'];
     $antar_jemput = $_POST['antar_jemput'];
     $alamat_jemput = $_POST['alamat_jemput'];
@@ -51,7 +51,7 @@ if (isset($_POST['update'])) {
     $update = mysqli_query($koneksi, "UPDATE transaksi SET 
         id_pelanggan = '$id_pelanggan',
         id_user = '$id_user',
-        id_jenis_layanan = '$id_jenis_layanan',
+        id_jns_layanan = '$id_jns_layanan',
         status_bayar = '$status_bayar',
         status_ambil = '$status_ambil',
         tgl_selesai = '$tgl_selesai',
@@ -70,7 +70,7 @@ if (isset($_POST['update'])) {
 
     if ($update) {
         // Ambil nama jenis layanan
-        $id_jns_layanan = $data_transaksi['id_jenis_layanan'];
+        $id_jns_layanan = $data_transaksi['id_jns_layanan'];
         $q_jenis = mysqli_query($koneksi, "SELECT jenis_layanan FROM jenis_layanan WHERE id_jns_layanan = '$id_jns_layanan'");
         $data_jenis = mysqli_fetch_assoc($q_jenis);
         $jenis_layanan_nama = $data_jenis['jenis_layanan'];
@@ -188,7 +188,7 @@ if (isset($_POST['update'])) {
                                         $kategori = mysqli_query($koneksi, "SELECT * FROM kategori_layanan");
                                         while ($k = mysqli_fetch_assoc($kategori)) {
                                             // Cek kategori yang sedang dipilih berdasarkan jenis layanan
-                                            $jenis_query = mysqli_query($koneksi, "SELECT id_kategori_layanan FROM jenis_layanan WHERE id_jns_layanan = '{$data_transaksi['id_jenis_layanan']}'");
+                                            $jenis_query = mysqli_query($koneksi, "SELECT id_kategori_layanan FROM jenis_layanan WHERE id_jns_layanan = '{$data_transaksi['id_jns_layanan']}'");
                                             $jenis_data = mysqli_fetch_assoc($jenis_query);
                                             $selected = ($k['id_kategori_layanan'] == $jenis_data['id_kategori_layanan']) ? 'selected' : '';
                                             echo "<option value='{$k['id_kategori_layanan']}' $selected>{$k['nm_layanan']}</option>";
@@ -199,10 +199,10 @@ if (isset($_POST['update'])) {
 
                                 <div class="form-group">
                                     <label>Jenis Layanan</label>
-                                    <select name="id_jenis_layanan" id="jenis_layanan" class="form-control" required>
+                                    <select name="id_jns_layanan" id="jenis_layanan" class="form-control" required>
                                         <?php
                                         // Load jenis layanan yang sudah dipilih
-                                        $jenis_layanan = mysqli_query($koneksi, "SELECT * FROM jenis_layanan WHERE id_jns_layanan = '{$data_transaksi['id_jenis_layanan']}'");
+                                        $jenis_layanan = mysqli_query($koneksi, "SELECT * FROM jenis_layanan WHERE id_jns_layanan = '{$data_transaksi['id_jns_layanan']}'");
                                         $jl = mysqli_fetch_assoc($jenis_layanan);
                                         echo "<option value='{$jl['id_jns_layanan']}' data-estimasi='{$jl['estimasi_waktu']}' data-tarif='{$jl['tarif']}' selected>{$jl['jenis_layanan']}</option>";
                                         ?>

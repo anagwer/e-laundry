@@ -8,7 +8,7 @@ if (isset($_GET['id'])) {
                                                u.nm_user as nama_user
                                                FROM transaksi t 
                                                JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
-                                               JOIN jenis_layanan jl ON t.id_jenis_layanan = jl.id_jns_layanan
+                                               JOIN jenis_layanan jl ON t.id_jns_layanan = jl.id_jns_layanan
                                                JOIN kategori_layanan kl ON jl.id_kategori_layanan = kl.id_kategori_layanan
                                                JOIN user u ON t.id_user = u.id_user
                                                WHERE t.id_transaksi = '$id_transaksi'");

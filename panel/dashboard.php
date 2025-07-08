@@ -13,7 +13,7 @@ $pendapatan_hari_ini = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(tot
 $pendapatan_bln_ini = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(total) as total FROM transaksi WHERE DATE_FORMAT(tgl_transaksi, '%Y-%m') = '$bln_ini'"))['total'] ?? 0;
 
 // Transaksi per jenis layanan
-$qLayanan = mysqli_query($koneksi, "SELECT jl.jenis_layanan, COUNT(t.id_transaksi) as total FROM transaksi t JOIN jenis_layanan jl ON t.id_jenis_layanan = jl.id_jns_layanan GROUP BY jl.jenis_layanan");
+$qLayanan = mysqli_query($koneksi, "SELECT jl.jenis_layanan, COUNT(t.id_transaksi) as total FROM transaksi t JOIN jenis_layanan jl ON t.id_jns_layanan = jl.id_jns_layanan GROUP BY jl.jenis_layanan");
 $jenis_layanan = $total_layanan = [];
 while ($row = mysqli_fetch_assoc($qLayanan)) {
     $jenis_layanan[] = $row['jenis_layanan'];

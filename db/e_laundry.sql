@@ -170,7 +170,7 @@ CREATE TABLE `transaksi` (
   `id_transaksi` int(11) NOT NULL,
   `id_pelanggan` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
-  `id_jenis_layanan` int(11) NOT NULL,
+  `id_jns_layanan` int(11) NOT NULL,
   `status_bayar` varchar(255) NOT NULL,
   `status_ambil` varchar(255) NOT NULL,
   `tgl_transaksi` datetime NOT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE `transaksi` (
 -- Dumping data for table `transaksi`
 --
 
-INSERT INTO `transaksi` (`id_transaksi`, `id_pelanggan`, `id_user`, `id_jenis_layanan`, `status_bayar`, `status_ambil`, `tgl_transaksi`, `tgl_mulai`, `tgl_selesai`, `antar_jemput`, `alamat_jemput`, `invoice`, `berat`, `tgl_diambil`, `bukti`, `total`, `metode_bayar`) VALUES
+INSERT INTO `transaksi` (`id_transaksi`, `id_pelanggan`, `id_user`, `id_jns_layanan`, `status_bayar`, `status_ambil`, `tgl_transaksi`, `tgl_mulai`, `tgl_selesai`, `antar_jemput`, `alamat_jemput`, `invoice`, `berat`, `tgl_diambil`, `bukti`, `total`, `metode_bayar`) VALUES
 (14, 6, 1, 4, 'Belum', 'Proses', '2025-07-07 01:09:07', '2025-07-07', '2025-07-08', 'Tidak', 'Jln. Soekarno Hatta No. 1, Jakarta Selatan', '20250707010907', '3', '0000-00-00 00:00:00', '', '150000', 'Tunai'),
 (15, 6, 1, 3, 'Belum', 'Proses', '2025-07-07 01:11:20', '2025-07-07', '2025-07-10', 'Tidak', 'Jln. Soekarno Hatta No. 1, Jakarta Selatan', '20250707011120', '2', '0000-00-00 00:00:00', '', '100000', 'Tunai'),
 (16, 6, 1, 2, 'Belum', 'Proses', '2025-07-07 01:32:00', '2025-07-07', '2025-07-10', 'Tidak', 'Jln. Soekarno Hatta No. 1, Jakarta Selatan', '20250707013200', '2', '0000-00-00 00:00:00', '', '100000', 'Tunai');

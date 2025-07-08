@@ -14,7 +14,7 @@ if (isset($_POST['filter'])) {
 $harian = mysqli_query($koneksi, "
     SELECT DATE(tgl_transaksi) as tanggal, j.jenis_layanan, COUNT(*) as total
     FROM transaksi t
-    LEFT JOIN jenis_layanan j ON t.id_jenis_layanan = j.id_jns_layanan
+    LEFT JOIN jenis_layanan j ON t.id_jns_layanan = j.id_jns_layanan
     $where
     GROUP BY DATE(tgl_transaksi), j.jenis_layanan
     ORDER BY tanggal DESC

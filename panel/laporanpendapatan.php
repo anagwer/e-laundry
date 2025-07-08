@@ -21,7 +21,7 @@ $query = mysqli_query($koneksi, "
     FROM transaksi t
     LEFT JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
     LEFT JOIN user u ON t.id_user = u.id_user
-    LEFT JOIN jenis_layanan j ON t.id_jenis_layanan = j.id_jns_layanan
+    LEFT JOIN jenis_layanan j ON t.id_jns_layanan = j.id_jns_layanan
     LEFT JOIN kategori_layanan l ON j.id_kategori_layanan = l.id_kategori_layanan
     $where
     ORDER BY t.tgl_transaksi DESC
