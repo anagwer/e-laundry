@@ -21,11 +21,13 @@ $kategori_data = mysqli_fetch_assoc($kategori);
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">Daftar Jenis Layanan</div>
+            <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
             <div class="ibox-tools">
                 <a href="index.php?page=layanandetailtambah&id=<?= $id_kategori ?>" class="btn btn-success btn-sm text-white">
                     <i class="fa fa-plus"></i> Tambah
                 </a>
             </div>
+            <?php endif;?>
         </div>
         <div class="ibox-body">
             <div class="table-responsive">
@@ -36,7 +38,9 @@ $kategori_data = mysqli_fetch_assoc($kategori);
                             <th>Jenis Layanan</th>
                             <th>Estimasi Waktu (Hari)</th>
                             <th>Tarif Perkilo</th>
+                            <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
                             <th>Aksi</th>
+                            <?php endif;?>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,10 +54,12 @@ $kategori_data = mysqli_fetch_assoc($kategori);
                                 <td><?= htmlspecialchars($row['jenis_layanan']); ?></td>
                                 <td><?= htmlspecialchars($row['estimasi_waktu']); ?> Hari</td>
                                 <td>Rp <?= number_format($row['tarif'], 0, ',', '.'); ?></td>
+                                <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
                                 <td>
                                     <a href="index.php?page=layanandetailedit&id=<?= $row['id_jns_layanan']; ?>&id_kategori=<?= $id_kategori ?>" class="btn btn-primary btn-sm">Edit</a>
                                     <a href="layanandetailhapus.php?id=<?= $row['id_jns_layanan']; ?>&id_kategori=<?= $id_kategori ?>" onclick="return confirm('Yakin ingin menghapus?')" class="btn btn-danger btn-sm">Hapus</a>
                                 </td>
+                                <?php endif;?>
                             </tr>
                         <?php } ?>
                     </tbody>

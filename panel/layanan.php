@@ -12,11 +12,13 @@
     <div class="ibox">
         <div class="ibox-head">
             <div class="ibox-title">Data Kategori Layanan</div>
+            <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
             <div class="ibox-tools">
                 <a href="index.php?page=layanantambah" class="btn btn-success btn-sm text-white">
                     <i class="fa fa-plus"></i> Tambah
                 </a>
             </div>
+            <?php endif;?>
         </div>
         <div class="ibox-body">
             <div class="table-responsive">
@@ -39,8 +41,10 @@
                                 <td><?= htmlspecialchars($row['nm_layanan']); ?></td>
                                 <td>
                                     <a href="index.php?page=layanandetail&id=<?= $row['id_kategori_layanan']; ?>" class="btn btn-info btn-sm">Detail</a>
+                                    <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
                                     <a href="index.php?page=layananedit&id=<?= $row['id_kategori_layanan']; ?>" class="btn btn-primary btn-sm">Edit</a>
                                     <a href="layananhapus.php?id=<?= $row['id_kategori_layanan']; ?>" onclick="return confirm('Yakin ingin menghapus?')" class="btn btn-danger btn-sm">Hapus</a>
+                                    <?php endif;?>
                                 </td>
                             </tr>
                         <?php } ?>

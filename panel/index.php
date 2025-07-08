@@ -145,6 +145,10 @@ if (!isset($_SESSION['user'])) {
                     <?php if ($_SESSION['user']['level_akses'] == 'Pelanggan'): ?>
                         <li class="heading">Main Menu</li>
                         <li>
+                            <a class="<?= in_array($page, ['layanan', 'layanantambah', 'layananedit', 'layanandetail', 'layanandetailtambah', 'layanandetailedit']) ? 'active' : '' ?>" href="index.php?page=layanan"><i class="fa fa-cogs mr-2"></i>Data Layanan
+                            </a>
+                        </li>
+                        <li>
                             <?php
                             $pelangganPages = ['transaksi', 'transaksitambah', 'transaksiedit', 'transaksidetail'];
                             $isPelangganMenu = in_array($page, $pelangganPages);

@@ -13,11 +13,9 @@
         <div class="ibox-head">
             <div class="ibox-title">Data Pelanggan</div>
             <div class="ibox-tools">
-                <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
                 <a href="index.php?page=pelanggantambah" class="btn btn-success btn-sm text-white">
                     <i class="fa fa-plus"></i> Tambah
                 </a>
-                <?php endif;?>
             </div>
         </div>
         <div class="ibox-body">
@@ -30,9 +28,7 @@
                             <th>No. Telepon</th>
                             <th>Kecamatan</th>
                             <th>Alamat</th>
-                            <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
                             <th>Aksi</th>
-                            <?php endif;?>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,13 +49,11 @@
                                 <td><?= htmlspecialchars($row['no_telp']); ?></td>
                                 <td><?= htmlspecialchars($row['kecamatan']); ?></td>
                                 <td><?= htmlspecialchars($row['alamat']); ?></td>
-                                <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
                                 <td>
 
                                     <a href="index.php?page=pelangganedit&id=<?= $row['id_pelanggan']; ?>" class="btn btn-primary btn-sm">Edit</a>
                                     <a href="pelangganhapus.php?id=<?= $row['id_pelanggan']; ?>" onclick="return confirm('Yakin ingin menghapus?')" class="btn btn-danger btn-sm">Hapus</a>
                                 </td>
-                                <?php endif;?>
                             </tr>
                         <?php } ?>
                     </tbody>
