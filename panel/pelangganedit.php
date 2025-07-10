@@ -75,7 +75,7 @@ if (isset($_POST['update'])) {
 <script>
     $(document).ready(function() {
         let selectedKecamatan = "<?= $data['kecamatan'] ?>";
-        $.getJSON("https://www.emsifa.com/api-wilayah-indonesia/api/districts/3174.json", function(data) {
+        $.getJSON("https://www.emsifa.com/api-wilayah-indonesia/api/districts/1674.json", function(data) {
             var $kecamatanSelect = $("#kecamatan");
             $.each(data, function(index, kecamatan) {
                 let selected = (kecamatan.name === selectedKecamatan) ? "selected" : "";

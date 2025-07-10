@@ -7,6 +7,15 @@
         <li class="breadcrumb-item">Transaksi</li>
     </ol>
 </div>
+<?php
+// Update status_ambil menjadi 'Selesai' jika tgl_selesai <= hari ini
+$today = date('Y-m-d');
+$update_query = mysqli_query($koneksi, "
+    UPDATE transaksi 
+    SET status_ambil = 'Selesai' 
+    WHERE status_ambil = 'Proses' AND DATE(tgl_selesai) <= '$today'
+");
+?>
 
 <div class="page-content fade-in-up">
     <div class="ibox">
@@ -104,9 +113,18 @@
                                 </td>
 
                                 <td>
-                                    <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
-                                        <a href="index.php?page=transaksiedit&id=<?= $row['id_transaksi']; ?>" class="btn btn-primary btn-sm">Edit</a>
-                                    <?php endif; ?>
+                                    <?php 
+                                        $tgl_selesai = new DateTime($row['tgl_selesai']);
+                                        $today = new DateTime(date('Y-m-d'));
+
+                                        if ($_SESSION['user']['level_akses'] == 'Admin' && $row['status_ambil'] == 'Proses' && $today < $tgl_selesai): ?>
+                                            <button class="btn btn-primary btn-sm" disabled>Edit</button>
+                                            <div class="alert alert-warning p-1 mt-1 mb-1 small">
+                                                <i class="fa fa-exclamation-triangle"></i> Laundry belum selesai. Tidak bisa edit.
+                                            </div>
+                                        <?php elseif ($_SESSION['user']['level_akses'] == 'Admin' && $row['status_ambil'] != 'Selesai'): ?>
+                                            <a href="index.php?page=transaksiedit&id=<?= $row['id_transaksi']; ?>" class="btn btn-primary btn-sm">Edit</a>
+                                        <?php endif; ?>
                                     <a href="index.php?page=transaksidetail&id=<?= $row['id_transaksi']; ?>" class="btn btn-primary btn-sm">Detail</a>
                                     <a href="transaksicetak.php?id=<?= $row['id_transaksi']; ?>" class="btn btn-primary btn-sm" target="_blank">Cetak</a>
                                     <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>

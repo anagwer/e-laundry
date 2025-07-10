@@ -14,7 +14,7 @@ if (isset($_POST['simpan'])) {
     $metode_bayar = $_POST['metode_bayar'];
 
     $status_bayar = ($metode_bayar == 'Transfer') ? 'Sudah' : 'Belum';
-    $status_ambil = 'Proses';
+    $status_ambil = 'Diajukan';
 
     // Ambil stok dan simulasikan pengurangan
     $stok_gagal = false;
@@ -154,6 +154,9 @@ if (isset($_POST['simpan'])) {
                                     <h3 id="total">Rp. 0</h3>
                                     <input type="hidden" name="total" id="input_total">
                                 </div>
+                                <div id="warning_biaya" style="display: none; color: red;">
+                                    <strong>Peringatan:</strong> Biaya antar jemput tambahan Rp. 10.000 karena di luar wilayah layanan utama.
+                                </div>
                             </div>
 
                             <!-- KANAN -->
@@ -187,7 +190,7 @@ if (isset($_POST['simpan'])) {
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Berat (kg)</label>
+                                    <label id="label_berat">Berat (kg)</label>
                                     <input type="number" name="berat" id="berat" class="form-control" required min="1">
                                 </div>
 
@@ -217,9 +220,9 @@ if (isset($_POST['simpan'])) {
                                 </div>
 
                                 <?php if ($_SESSION['user']['level_akses'] == 'Admin') : ?>
-                                    <div class="form-group">
+                                    <div class="form-group" id="kebutuhan">
                                         <label>Kebutuhan Pokok (per kg)</label>
-                                        <div id="kebutuhan">
+                                        <div>
                                             Pewangi: <span id="k_pewangi">-</span> <br>
                                             Pelembut: <span id="k_pelembut">-</span> <br>
                                             Deterjen: <span id="k_deterjen">-</span>
@@ -298,6 +301,7 @@ if (isset($_POST['simpan'])) {
 
         // Auto alamat pelanggan saat antar jemput
         $('input[name="antar_jemput"]').change(function() {
+            updateTotal();
             var val = $(this).val();
             if (val == "Ya") {
                 var alamat = $('#id_pelanggan option:selected').data('alamat');
@@ -305,8 +309,8 @@ if (isset($_POST['simpan'])) {
                 $('#alamat_jemput').val(alamat);
                 $('#kecamatan_jemput').val(kecamatan);
             } else {
-                $('#alamat_jemput').val("Jln. Soekarno Hatta No. 1, Jakarta Selatan");
-                $('#kecamatan_jemput').val("Jakarta Selatan");
+                $('#alamat_jemput').val("Tanah Periuk, Kec. Lubuk Linggau Sel. II, Kota Lubuklinggau, Sumatera Selatan 31625");
+                $('#kecamatan_jemput').val("LUBUK LINGGAU SELATAN II");
             }
         });
 
@@ -320,6 +324,22 @@ if (isset($_POST['simpan'])) {
             var berat = parseFloat($('#berat').val()) || 0;
             var tarif = parseFloat($('#tarif').val()) || 0;
             var total = berat * tarif;
+
+            // Cek apakah antar jemput = Ya
+            var antarJemput = $('input[name="antar_jemput"]:checked').val();
+            if (antarJemput === 'Ya') {
+                var kecamatan = $('#id_pelanggan option:selected').data('kecamatan');
+                // Jika kecamatan bukan Lubuk Linggau Selatan 2 atau Lubuk Linggau Timur 1
+                if (kecamatan !== 'LUBUK LINGGAU SELATAN II' && kecamatan !== 'LUBUK LINGGAU TIMUR I') {
+                    total += 10000; // Tambahkan biaya tambahan 10.000
+                    $('#warning_biaya').show(); // Tampilkan warning
+                } else {
+                    $('#warning_biaya').hide(); // Sembunyikan warning
+                }
+            } else {
+                $('#warning_biaya').hide(); // Sembunyikan warning jika tidak antar jemput
+            }
+
             $('#total').text('Rp. ' + total.toLocaleString());
             $('#input_total').val(total);
         }
@@ -330,5 +350,23 @@ if (isset($_POST['simpan'])) {
             if ($('#k_pelembut').length) $('#k_pelembut').text(berat);
             if ($('#k_deterjen').length) $('#k_deterjen').text(berat);
         }
+
+        // Fungsi untuk update label Berat menjadi Jumlah Cucian jika jenis layanan = Laundry Satuan
+        function updateLabelBerat() {
+            var kategoriLayanan = $('#kategori option:selected').text();
+            if (kategoriLayanan === 'Laundry Satuan') {
+                $('#label_berat').text('Jumlah Cucian');
+                $('#berat').attr('placeholder', 'Contoh: 5');
+                $('#berat').attr('min', '1');
+            } else {
+                $('#label_berat').text('Berat (kg)');
+                $('#berat').attr('placeholder', 'Dalam kilogram');
+            }
+        }
+
+        // Panggil fungsi saat kategori berubah
+        $('#kategori').change(function () {
+            updateLabelBerat();
+        });
     });
 </script>

@@ -71,7 +71,7 @@ if (isset($_POST['simpan'])) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $.getJSON("https://www.emsifa.com/api-wilayah-indonesia/api/districts/3174.json", function(data) {
+        $.getJSON("https://www.emsifa.com/api-wilayah-indonesia/api/districts/1674.json", function(data) {
             var $kecamatanSelect = $("#kecamatan");
             $.each(data, function(index, kecamatan) {
                 $kecamatanSelect.append($("<option></option>").val(kecamatan.name).text(kecamatan.name));
