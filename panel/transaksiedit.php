@@ -284,28 +284,18 @@ if (isset($_POST['update'])) {
 
 
                                 <?php
-                                    // Ambil nama jenis layanan untuk logika tampilan
-                                    $jenis_layanan_nama = $jl['jenis_layanan'];
-                                    ?>
-                                    <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
-                                        <div class="form-group">
-                                            <label>Kebutuhan Pokok (per kg)</label>
-                                            <div id="kebutuhan">
-                                                <?php if ($jenis_layanan_nama == 'Cuci + Setrika'): ?>
-                                                    Pewangi: <span id="k_pewangi"><?= $data_transaksi['berat'] ?></span><br>
-                                                    Pelembut: <span id="k_pelembut"><?= $data_transaksi['berat'] ?></span><br>
-                                                    Deterjen: <span id="k_deterjen"><?= $data_transaksi['berat'] ?></span>
-                                                <?php elseif ($jenis_layanan_nama == 'Hanya Cuci'): ?>
-                                                    Pelembut: <span id="k_pelembut"><?= $data_transaksi['berat'] ?></span><br>
-                                                    Deterjen: <span id="k_deterjen"><?= $data_transaksi['berat'] ?></span>
-                                                <?php elseif ($jenis_layanan_nama == 'Setrika'): ?>
-                                                    Pewangi: <span id="k_pewangi"><?= $data_transaksi['berat'] ?></span>
-                                                <?php else: ?>
-                                                    Tidak ada bahan diperlukan
-                                                <?php endif; ?>
-                                            </div>
+                                // Ambil nama jenis layanan untuk logika tampilan
+                                $jenis_layanan_nama = $jl['jenis_layanan'];
+                                ?>
+                                <?php if ($_SESSION['user']['level_akses'] == 'Admin'): ?>
+                                    <div class="form-group">
+                                        <label>Kebutuhan Pokok (per kg)</label>
+                                        <div id="kebutuhan">
+                                            <!-- KONTEN DI SINI DIHAPUS, AKAN DIISI OLEH JS -->
                                         </div>
-                                    <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+
                             </div>
                         </div>
 
@@ -322,47 +312,21 @@ if (isset($_POST['update'])) {
 </div>
 
 <script>
-    $(document).ready(function() {
-        // Load jenis layanan ketika kategori dipilih
-        $('#kategori').change(function() {
-            var kategoriId = $(this).val();
-            $('#jenis_layanan').html('<option>Loading...</option>');
-            $.getJSON("get_jenis_layanan.php?id=" + kategoriId, function(data) {
-                var html = '<option value="">-- Pilih Jenis --</option>';
-                $.each(data, function(i, item) {
-                    html += `<option value="${item.id_jns_layanan}" data-estimasi="${item.estimasi_waktu}" data-tarif="${item.tarif}">${item.jenis_layanan}</option>`;
-                });
-                $('#jenis_layanan').html(html);
-            });
-        });
-
-        // Auto isi estimasi dan tarif
-        $('#jenis_layanan').change(function() {
-            var estimasi = $('option:selected', this).data('estimasi');
-            var tarif = $('option:selected', this).data('tarif');
-            $('#estimasi').val(estimasi + ' hari');
-            $('#tarif').val(tarif);
-            updateTanggalSelesai(estimasi);
-            updateTotal();
-        });
-
-        $('#berat').on('input', function() {
-            updateTotal();
-            updateKebutuhan();
-        });
-
-        // Auto alamat pelanggan saat antar jemput
-        $('input[name="antar_jemput"]').change(function() {
-            var val = $(this).val();
-            if (val == "Ya") {
-                var alamat = $('#id_pelanggan option:selected').data('alamat');
-                if (alamat) {
-                    $('#alamat_jemput').val(alamat);
-                }
-            } else {
-                $('#alamat_jemput').val("Jln. Soekarno Hatta No. 1, Jakarta Selatan");
-            }
-        });
+    $(document).ready(function () {
+        const bahanMap = {
+            'Cuci + Setrika': { 'Pewangi': 1, 'Pelembut': 1, 'Deterjen': 1 },
+            'Hanya Cuci': { 'Pelembut': 1, 'Deterjen': 1 },
+            'Setrika': { 'Pewangi': 1 },
+            'Bantal Kursi': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3 },
+            'Bed Cover Single': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3 },
+            'Bantal Besar': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3 },
+            'Bed Cover Double': { 'Pewangi': 4, 'Pelembut': 2, 'Deterjen': 4 },
+            'Sprei 1 Set': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2 },
+            'Selimut': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2 },
+            'Handuk Besar': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2 },
+            'Handuk Kecil': { 'Pewangi': 1, 'Pelembut': 1, 'Deterjen': 1 },
+            'Jas': { 'Pewangi': 1, 'Pelembut': 1, 'Deterjen': 1 }
+        };
 
         function updateTanggalSelesai(estimasi) {
             var masuk = new Date($('#tgl_masuk').val());
@@ -380,12 +344,82 @@ if (isset($_POST['update'])) {
 
         function updateKebutuhan() {
             var berat = parseInt($('#berat').val()) || 1;
-            $('#k_pewangi').text(berat);
-            $('#k_pelembut').text(berat);
-            $('#k_deterjen').text(berat);
+
+            $('#kebutuhan span').each(function () {
+                var perItem = parseInt($(this).data('peritem')) || 1;
+                $(this).text(berat * perItem);
+            });
         }
 
-        // Trigger update total pada load awal
+        function renderKebutuhan(jenisLayanan) {
+            var kebutuhanDiv = $('#kebutuhan');
+            kebutuhanDiv.empty();
+
+            if (bahanMap[jenisLayanan]) {
+                for (var nama in bahanMap[jenisLayanan]) {
+                    var perItem = bahanMap[jenisLayanan][nama];
+                    var id = 'k_' + nama.toLowerCase();
+                    kebutuhanDiv.append(`${nama}: <span id="${id}" data-peritem="${perItem}">0</span><br>`);
+                }
+            } else {
+                kebutuhanDiv.text("Tidak ada bahan diperlukan");
+            }
+
+            updateKebutuhan();
+        }
+
+        // Ketika kategori layanan dipilih
+        $('#kategori').change(function () {
+            var kategoriId = $(this).val();
+            $('#jenis_layanan').html('<option>Loading...</option>');
+
+            $.getJSON("get_jenis_layanan.php?id=" + kategoriId, function (data) {
+                var html = '<option value="">-- Pilih Jenis --</option>';
+                $.each(data, function (i, item) {
+                    html += `<option value="${item.id_jns_layanan}" data-estimasi="${item.estimasi_waktu}" data-tarif="${item.tarif}">${item.jenis_layanan}</option>`;
+                });
+                $('#jenis_layanan').html(html);
+            });
+        });
+
+        // Ketika jenis layanan berubah
+        $('#jenis_layanan').change(function () {
+            var selected = $('option:selected', this);
+            var estimasi = selected.data('estimasi');
+            var tarif = selected.data('tarif');
+            var jenisLayanan = selected.text();
+
+            $('#estimasi').val(estimasi + ' hari');
+            $('#tarif').val(tarif);
+
+            updateTanggalSelesai(estimasi);
+            updateTotal();
+            renderKebutuhan(jenisLayanan);
+        });
+
+        // Update berat
+        $('#berat').on('input', function () {
+            updateTotal();
+            updateKebutuhan();
+        });
+
+        // Auto isi alamat jika antar jemput
+        $('input[name="antar_jemput"]').change(function () {
+            var val = $(this).val();
+            if (val == "Ya") {
+                var alamat = $('#id_pelanggan option:selected').data('alamat');
+                if (alamat) {
+                    $('#alamat_jemput').val(alamat);
+                }
+            } else {
+                $('#alamat_jemput').val("Jln. Soekarno Hatta No. 1, Jakarta Selatan");
+            }
+        });
+
+        // Trigger awal
         updateTotal();
+        updateKebutuhan();
+        renderKebutuhan("<?= $jl['jenis_layanan'] ?>");
+
     });
 </script>
