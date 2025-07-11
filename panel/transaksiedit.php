@@ -159,13 +159,18 @@ if (isset($_POST['update'])) {
                                         </select>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label>Status Pengambilan</label>
+                                    <?php if ($data_transaksi['status_ambil'] == 'Proses'): ?>
+                                        <select class="form-control" disabled>
+                                            <option selected>Proses</option>
+                                        </select>
+                                        <input type="hidden" name="status_ambil" value="Proses">
+                                    <?php else: ?>
                                         <select name="status_ambil" class="form-control" required>
                                             <option value="Proses" <?= ($data_transaksi['status_ambil'] == 'Proses') ? 'selected' : '' ?>>Proses</option>
                                             <option value="Selesai" <?= ($data_transaksi['status_ambil'] == 'Selesai') ? 'selected' : '' ?>>Selesai</option>
                                         </select>
-                                    </div>
+                                    <?php endif; ?>
+
                                 <?php else: ?>
                                     <input type="hidden" name="status_bayar" id="" value="<?= $data_transaksi['status_bayar']; ?>">
                                     <input type="hidden" name="status_ambil" id="" value="<?= $data_transaksi['status_ambil']; ?>">
