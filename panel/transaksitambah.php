@@ -277,18 +277,31 @@ if (isset($_POST['simpan'])) {
             updateTotal();
 
             // Tampilkan kebutuhan bahan
-            var jenisLayanan = $(this).find("option:selected").text();
+            var jenisLayanan = $(this).find("option:selected").text().trim();
             var html = '';
-            if (jenisLayanan === 'Cuci + Setrika') {
-                html += 'Pewangi: <span id="k_pewangi">1</span><br>';
-                html += 'Pelembut: <span id="k_pelembut">1</span><br>';
-                html += 'Deterjen: <span id="k_deterjen">1</span>';
+            if (jenisLayanan === 'Cuci + Setrika' || jenisLayanan === 'Handuk Kecil' || jenisLayanan === 'Jas') {
+                html += 'Pewangi: <span id="k_pewangi" data-peritem="1">0</span><br>';
+                html += 'Pelembut: <span id="k_pelembut" data-peritem="1">0</span><br>';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="1">0</span>';
             } else if (jenisLayanan === 'Hanya Cuci') {
-                html += 'Pelembut: <span id="k_pelembut">1</span><br>';
-                html += 'Deterjen: <span id="k_deterjen">1</span>';
+                html += 'Pelembut: <span id="k_pelembut" data-peritem="1">0</span><br>';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="1">0</span>';
             } else if (jenisLayanan === 'Setrika') {
-                html += 'Pewangi: <span id="k_pewangi">1</span>';
+                html += 'Pewangi: <span id="k_pewangi" data-peritem="1">0</span>';
+            } else if (jenisLayanan === 'Bantal Kursi' || jenisLayanan === 'Bed Cover Single' || jenisLayanan === 'Bantal Besar') {
+                html += 'Pewangi: <span id="k_pewangi" data-peritem="2">0</span><br>';
+                html += 'Pelembut: <span id="k_pelembut" data-peritem="1">0</span><br>';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="3">0</span>';
+            } else if (jenisLayanan === 'Bed Cover Double') {
+                html += 'Pewangi: <span id="k_pewangi" data-peritem="4">0</span><br>';
+                html += 'Pelembut: <span id="k_pelembut" data-peritem="2">0</span><br>';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="4">0</span>';
+            } else if (jenisLayanan === 'Sprei 1 Set' || jenisLayanan === 'Selimut' || jenisLayanan === 'Handuk Besar') {
+                html += 'Pewangi: <span id="k_pewangi" data-peritem="2">0</span><br>';
+                html += 'Pelembut: <span id="k_pelembut" data-peritem="2">0</span><br>';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="2">0</span>';
             }
+
             $('#kebutuhan').html(html);
 
             updateKebutuhan(); // panggil sekali untuk inisialisasi
@@ -345,11 +358,22 @@ if (isset($_POST['simpan'])) {
         }
 
         function updateKebutuhan() {
-            var berat = parseInt($('#berat').val()) || 1;
-            if ($('#k_pewangi').length) $('#k_pewangi').text(berat);
-            if ($('#k_pelembut').length) $('#k_pelembut').text(berat);
-            if ($('#k_deterjen').length) $('#k_deterjen').text(berat);
+            var jumlah = parseInt($('#berat').val()) || 1;
+
+            if ($('#k_pewangi').length) {
+                var perItem = parseInt($('#k_pewangi').data('peritem')) || 1;
+                $('#k_pewangi').text(jumlah * perItem);
+            }
+            if ($('#k_pelembut').length) {
+                var perItem = parseInt($('#k_pelembut').data('peritem')) || 1;
+                $('#k_pelembut').text(jumlah * perItem);
+            }
+            if ($('#k_deterjen').length) {
+                var perItem = parseInt($('#k_deterjen').data('peritem')) || 1;
+                $('#k_deterjen').text(jumlah * perItem);
+            }
         }
+
 
         // Fungsi untuk update label Berat menjadi Jumlah Cucian jika jenis layanan = Laundry Satuan
         function updateLabelBerat() {
