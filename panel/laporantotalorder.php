@@ -128,6 +128,12 @@ while ($b = mysqli_fetch_assoc($bulanan)) {
                                     </tr>
                                 <?php endwhile; ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2" class="text-center">Total Order</th>
+                                    <th colspan="1"><?php echo $totalSemua;?></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

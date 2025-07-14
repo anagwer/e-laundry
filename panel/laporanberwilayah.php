@@ -117,6 +117,7 @@ while ($b = mysqli_fetch_assoc($bulanan)) {
                             </thead>
                             <tbody>
                                 <?php $no = 1;
+                                $ttlpelanggan=0;
                                 while ($row = mysqli_fetch_assoc($wilayah)) : ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
@@ -128,8 +129,16 @@ while ($b = mysqli_fetch_assoc($bulanan)) {
                                             </a>
                                         </td>
                                     </tr>
-                                <?php endwhile; ?>
+                                <?php 
+                                $ttlpelanggan = $ttlpelanggan +$row['total'];
+                                endwhile; ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2" class="text-center">Total Pelanggan</th>
+                                    <th colspan="1"><?php echo $ttlpelanggan; ?></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

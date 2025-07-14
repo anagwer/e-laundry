@@ -101,24 +101,26 @@ for ($i = 1; $i <= $days_in_month; $i++) {
             <div class="col-md-6">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Transaksi per Jenis Layanan</div>
+                        <div class="ibox-title">Total Transaksi Berdasarkan Jenis Layanan</div>
                     </div>
                     <div class="ibox-body">
+                        <a href="index.php?page=laporanberjenislayanan">
                         <div style="width:100%; height:250px">
                             <canvas id="chartLayanan"></canvas>
-                        </div>
+                        </div></a>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Pelanggan per Kecamatan</div>
+                        <div class="ibox-title">Pelanggan Berdasarkan Kecamatan</div>
                     </div>
                     <div class="ibox-body">
+                        <a href="index.php?page=laporanberwilayah">
                         <div style="width:100%; height:250px">
                             <canvas id="chartKecamatan"></canvas>
-                        </div>
+                        </div></a>
                     </div>
                 </div>
             </div>
@@ -127,24 +129,28 @@ for ($i = 1; $i <= $days_in_month; $i++) {
             <div class="col-md-6">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Transaksi Bulan Ini</div>
+                        <div class="ibox-title"> Total Transaksi order Bulan Ini</div>
                     </div>
                     <div class="ibox-body">
+                        <a href="index.php?page=laporantotalorder">
                         <div style="width:100%; height:250px">
                             <canvas id="chartTransaksi"></canvas>
                         </div>
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Pendapatan Harian Bulan Ini</div>
+                        <div class="ibox-title">Total Pendapatan Harian Bulan Ini</div>
                     </div>
                     <div class="ibox-body">
+                        <a href="index.php?page=laporanpendapatan">
                         <div style="width:100%; height:250px">
                             <canvas id="chartPendapatan"></canvas>
                         </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -153,12 +159,14 @@ for ($i = 1; $i <= $days_in_month; $i++) {
             <div class="col-md-6">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Pelanggan Baru Bulan Ini</div>
+                        <div class="ibox-title">Total Pelanggan Baru Bulan Ini</div>
                     </div>
                     <div class="ibox-body">
+                        <a href="index.php?page=laporanpelangganbaru">
                         <div style="width:100%; height:300px;">
                             <canvas id="chartPelangganBaru"></canvas>
                         </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -170,7 +178,7 @@ for ($i = 1; $i <= $days_in_month; $i++) {
 
     <div class="page-content fade-in-up">
         <div class="text-center mb-4">
-            <h4><strong>SELAMAT DATANG DI LAUNDRY XYZ</strong></h4>
+            <h4><strong>SELAMAT DATANG DI MW LAUNDRY </strong></h4>
             <em>Cuci kilat, hasil memukau! Coba layanan laundry kami sekarang</em>
             <hr style="width: 50%; margin: 10px auto;">
         </div>
@@ -191,7 +199,7 @@ for ($i = 1; $i <= $days_in_month; $i++) {
         </div>
 
         <div class="text-center mb-5">
-            <strong>Alamat : Jalan Sukarno Hatta</strong>
+            <strong>Alamat : Jalan Fatmawati Soekarno, Taba Lestari, Kec. Lubuklinggau Timur I, Kota. Lubuklinggau, Sumatera Selatan</strong>
         </div>
     </div>
 

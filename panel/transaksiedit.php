@@ -67,6 +67,23 @@ if (isset($_POST['update'])) {
     if ($status_ambil == 'Selesai') {
         mysqli_query($koneksi, "UPDATE transaksi SET tgl_diambil = NOW() WHERE id_transaksi = '$id_transaksi'");
     }
+    // Cek apakah status pembayaran sudah lunas dan status pengambilan selesai
+    if ($status_ambil == 'Selesai' && $status_bayar == 'Sudah') {
+        // Ambil data antar jemput dari database
+        $q_transaksi = mysqli_query($koneksi, "SELECT antar_jemput FROM transaksi WHERE id_transaksi = '$id_transaksi'");
+        $data_transaksi_antar = mysqli_fetch_assoc($q_transaksi);
+        $antar_jemput = $data_transaksi_antar['antar_jemput'];
+
+        // Update status_ambil berdasarkan antar jemput
+        if ($antar_jemput == 'Ya') {
+            $new_status_ambil = 'Proses Pengantaran';
+        } else {
+            $new_status_ambil = 'Barang Sudah Diambil';
+        }
+
+        // Update ke database
+        mysqli_query($koneksi, "UPDATE transaksi SET status_ambil = '$new_status_ambil' WHERE id_transaksi = '$id_transaksi'");
+    }
 
     if ($update) {
         // Ambil nama jenis layanan
@@ -158,7 +175,8 @@ if (isset($_POST['update'])) {
                                             <option value="Sudah" <?= ($data_transaksi['status_bayar'] == 'Sudah') ? 'selected' : '' ?>>Sudah</option>
                                         </select>
                                     </div>
-
+                                    <div class="form-group">
+                                    <label>Status Pengambilan</label>
                                     <?php if ($data_transaksi['status_ambil'] == 'Proses'): ?>
                                         <select class="form-control" disabled>
                                             <option selected>Proses</option>
@@ -170,7 +188,7 @@ if (isset($_POST['update'])) {
                                             <option value="Selesai" <?= ($data_transaksi['status_ambil'] == 'Selesai') ? 'selected' : '' ?>>Selesai</option>
                                         </select>
                                     <?php endif; ?>
-
+                                    </div>
                                 <?php else: ?>
                                     <input type="hidden" name="status_bayar" id="" value="<?= $data_transaksi['status_bayar']; ?>">
                                     <input type="hidden" name="status_ambil" id="" value="<?= $data_transaksi['status_ambil']; ?>">

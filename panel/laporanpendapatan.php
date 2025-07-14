@@ -133,7 +133,7 @@ while ($row = mysqli_fetch_assoc($pendapatanHarian)) {
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="8" class="text-right">Total Pendapatan</th>
+                                    <th colspan="8" class="text-center">Total Pendapatan</th>
                                     <th colspan="1">Rp <?= number_format($totalPendapatan, 0, ',', '.') ?></th>
                                 </tr>
                             </tfoot>

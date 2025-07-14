@@ -132,6 +132,12 @@ while ($b = mysqli_fetch_assoc($bulanan)) {
                                     </tr>
                                 <?php endwhile; ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3" class="text-center">Total Transaksi</th>
+                                    <th colspan="1"><?php echo $totalSemua; ?></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

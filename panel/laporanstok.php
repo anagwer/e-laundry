@@ -119,6 +119,9 @@ while ($b = mysqli_fetch_assoc($barang)) {
                     </thead>
                     <tbody>
                         <?php $no = 1;
+                        $ttlmasuk =0;
+                        $ttlkeluar =0;
+                        $ttlstok =0;
                         foreach ($dataBarang as $row): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
@@ -134,8 +137,21 @@ while ($b = mysqli_fetch_assoc($barang)) {
                                     </a>
                                 </td>
                             </tr>
-                        <?php endforeach ?>
+                        <?php 
+                        $ttlkeluar = $ttlkeluar +$row['total_masuk'];
+                        $ttlmasuk = $ttlmasuk + $row['total_keluar'];
+                        $ttlstok = $ttlstok + $row['stok'];
+                        endforeach ?>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="text-center">Total Masuk</th>
+                            <th colspan="1"><?php echo $ttlmasuk; ?></th>
+                            <th colspan="1" class="text-center">Total Keluar</th>
+                            <th colspan="1"><?php echo $ttlkeluar; ?></th>
+                            <th colspan="1"><?php echo $ttlstok; ?></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
