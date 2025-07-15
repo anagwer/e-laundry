@@ -25,12 +25,14 @@ if (isset($_POST['simpan'])) {
     $data_jenis = mysqli_fetch_assoc($q_jenis);
     $jenis_layanan_nama = $data_jenis['jenis_layanan'];
 
-    if ($jenis_layanan_nama == 'Cuci + Setrika' || $jenis_layanan_nama === 'Handuk Kecil' || $jenis_layanan_nama === 'Jas' || $jenis_layanan_nama === 'Bed Cover Double') {
+    if ($jenis_layanan_nama == 'Cuci + Setrika') {
         $barang = ['Deterjen', 'Pelembut', 'Pewangi'];
+    } elseif ($jenis_layanan_nama === 'Handuk Kecil' || $jenis_layanan_nama === 'Jas' || $jenis_layanan_nama === 'Bed Cover Double') {
+        $barang = ['Deterjen', 'Pelembut', 'Pewangi', 'Plastik'];
     } elseif ($jenis_layanan_nama === 'Bantal Kursi' || $jenis_layanan_nama === 'Bed Cover Single' || $jenis_layanan_nama === 'Bantal Besar') {
-        $barang = ['Deterjen', 'Pelembut', 'Pewangi'];
+        $barang = ['Deterjen', 'Pelembut', 'Pewangi', 'Plastik'];
     } elseif ($jenis_layanan_nama === 'Sprei 1 Set' || $jenis_layanan_nama === 'Selimut' || $jenis_layanan_nama === 'Handuk Besar') {
-        $barang = ['Deterjen', 'Pelembut', 'Pewangi'];
+        $barang = ['Deterjen', 'Pelembut', 'Pewangi', 'Plastik'];
     } elseif ($jenis_layanan_nama == 'Hanya Cuci') {
         $barang = ['Deterjen', 'Pelembut'];
     } elseif ($jenis_layanan_nama == 'Setrika') {
@@ -195,7 +197,7 @@ if (isset($_POST['simpan'])) {
 
                                 <div class="form-group">
                                     <label id="label_berat">Berat (kg)</label>
-                                    <input type="number" name="berat" id="berat" class="form-control" required min="1">
+                                    <input type="number" name="berat" id="berat" class="form-control" required min="1" step="0.1" placeholder="Contoh: 2.9 kg">
                                 </div>
 
                                 <div class="form-group">
@@ -229,7 +231,8 @@ if (isset($_POST['simpan'])) {
                                         <div id="kebutuhan"><b>
                                             Pewangi: <span id="k_pewangi">-</span> (Tutup botol) <br>
                                             Pelembut: <span id="k_pelembut">-</span> (Sendok)<br>
-                                            Deterjen: <span id="k_deterjen">-</span> (Tutup botol)
+                                            Deterjen: <span id="k_deterjen">-</span> (Tutup botol)<br>
+                                            Plastik: <span id="k_plastik">-</span> (Lembar)
                                             </b>
                                         </div>
                                     </div>
@@ -284,27 +287,35 @@ if (isset($_POST['simpan'])) {
             // Tampilkan kebutuhan bahan
             var jenisLayanan = $(this).find("option:selected").text().trim();
             var html = '';
-            if (jenisLayanan === 'Cuci + Setrika' || jenisLayanan === 'Handuk Kecil' || jenisLayanan === 'Jas') {
-                html += 'Pewangi: <span id="k_pewangi" data-peritem="1">0</span> (Tutup botol)<br>';
+            if (jenisLayanan === 'Cuci + Setrika') {
+                html += '<b>Pewangi: <span id="k_pewangi" data-peritem="1">0</span> (Tutup botol)<br>';
                 html += 'Pelembut: <span id="k_pelembut" data-peritem="1">0</span> (Tutup botol)<br>';
-                html += 'Deterjen: <span id="k_deterjen" data-peritem="1">0</span> (Sendok)';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="1">0</span> (Sendok)</b>';
             } else if (jenisLayanan === 'Hanya Cuci') {
-                html += 'Pelembut: <span id="k_pelembut" data-peritem="1">0</span> (Tutup botol)<br>';
-                html += 'Deterjen: <span id="k_deterjen" data-peritem="1">0</span> (Sendok)';
+                html += '<b>Pelembut: <span id="k_pelembut" data-peritem="1">0</span> (Tutup botol)<br>';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="1">0</span> (Sendok)</b>';
             } else if (jenisLayanan === 'Setrika') {
-                html += 'Pewangi: <span id="k_pewangi" data-peritem="1">0</span> (Tutup botol)';
-            } else if (jenisLayanan === 'Bantal Kursi' || jenisLayanan === 'Bed Cover Single' || jenisLayanan === 'Bantal Besar') {
-                html += 'Pewangi: <span id="k_pewangi" data-peritem="2">0</span> (Tutup botol)<br>';
+                html += '<b>Pewangi: <span id="k_pewangi" data-peritem="1">0</span> (Tutup botol)</b>';
+            } else if (jenisLayanan === 'Handuk Kecil' || jenisLayanan === 'Jas') {
+                html += '<b>Pewangi: <span id="k_pewangi" data-peritem="1">0</span> (Tutup botol)<br>';
                 html += 'Pelembut: <span id="k_pelembut" data-peritem="1">0</span> (Tutup botol)<br>';
-                html += 'Deterjen: <span id="k_deterjen" data-peritem="3">0</span> (Sendok)';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="1">0</span> (Sendok)<br>';
+                html += 'Plastik: <span id="k_plastik" data-peritem="1">0</span> (lembar)</b>';
+            } else if (jenisLayanan === 'Bantal Kursi' || jenisLayanan === 'Bed Cover Single' || jenisLayanan === 'Bantal Besar') {
+                html += '<b>Pewangi: <span id="k_pewangi" data-peritem="2">0</span> (Tutup botol)<br>';
+                html += 'Pelembut: <span id="k_pelembut" data-peritem="1">0</span> (Tutup botol)<br>';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="3">0</span> (Sendok)<br>';
+                html += 'Plastik: <span id="k_plastik" data-peritem="1">0</span> (lembar)</b>';
             } else if (jenisLayanan === 'Bed Cover Double') {
-                html += 'Pewangi: <span id="k_pewangi" data-peritem="4">0</span> (Tutup botol)<br>';
+                html += '<b>Pewangi: <span id="k_pewangi" data-peritem="4">0</span> (Tutup botol)<br>';
                 html += 'Pelembut: <span id="k_pelembut" data-peritem="2">0</span> (Tutup botol)<br>';
-                html += 'Deterjen: <span id="k_deterjen" data-peritem="4">0</span> (Sendok)';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="4">0</span> (Sendok)<br>';
+                html += 'Plastik: <span id="k_plastik" data-peritem="1">0</span> (lembar)</b>';
             } else if (jenisLayanan === 'Sprei 1 Set' || jenisLayanan === 'Selimut' || jenisLayanan === 'Handuk Besar') {
-                html += 'Pewangi: <span id="k_pewangi" data-peritem="2">0</span> (Tutup botol)<br>';
+                html += '<b>Pewangi: <span id="k_pewangi" data-peritem="2">0</span> (Tutup botol)<br>';
                 html += 'Pelembut: <span id="k_pelembut" data-peritem="2">0</span> (Tutup botol)<br>';
-                html += 'Deterjen: <span id="k_deterjen" data-peritem="2">0</span> (Sendok)';
+                html += 'Deterjen: <span id="k_deterjen" data-peritem="2">0</span> (Sendok)<br>';
+                html += 'Plastik: <span id="k_plastik" data-peritem="1">0</span> (lembar)</b>';
             }
 
             $('#kebutuhan').html(html);
@@ -327,7 +338,7 @@ if (isset($_POST['simpan'])) {
                 $('#alamat_jemput').val(alamat);
                 $('#kecamatan_jemput').val(kecamatan);
             } else {
-                $('#alamat_jemput').val("Tanah Periuk, Kec. Lubuk Linggau Sel. II, Kota Lubuklinggau, Sumatera Selatan 31625");
+                $('#alamat_jemput').val("Jl. Fatmawati Soekarno, Taba Lestari, Kec. Lubuklinggau Timur I, Kota. Lubuklinggau, Sumatera Selatan");
                 $('#kecamatan_jemput').val("LUBUK LINGGAU SELATAN II");
             }
         });
@@ -363,8 +374,7 @@ if (isset($_POST['simpan'])) {
         }
 
         function updateKebutuhan() {
-            var jumlah = parseInt($('#berat').val()) || 1;
-
+            var jumlah = Math.ceil(parseFloat($('#berat').val())) || 1;
             if ($('#k_pewangi').length) {
                 var perItem = parseInt($('#k_pewangi').data('peritem')) || 1;
                 $('#k_pewangi').text(jumlah * perItem);
@@ -376,6 +386,10 @@ if (isset($_POST['simpan'])) {
             if ($('#k_deterjen').length) {
                 var perItem = parseInt($('#k_deterjen').data('peritem')) || 1;
                 $('#k_deterjen').text(jumlah * perItem);
+            }
+            if ($('#k_plastik').length) {
+                var perItem = parseInt($('#k_plastik').data('peritem')) || 1;
+                $('#k_plastik').text(jumlah * perItem);
             }
         }
 

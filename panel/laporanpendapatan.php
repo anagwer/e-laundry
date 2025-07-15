@@ -36,9 +36,14 @@ $pendapatanHarian = mysqli_query($koneksi, "
     ORDER BY tanggal ASC
 ");
 
-while ($row = mysqli_fetch_assoc($pendapatanHarian)) {
-    $line_labels[] = date('d-m-Y', strtotime($row['tanggal']));
-    $line_data[] = (float)$row['total'];
+$bln_ini = date('Y-m');
+$line_labels = $line_data = [];
+$days_in_month = date('t');
+for ($i = 1; $i <= $days_in_month; $i++) {
+    $tgl = date("$bln_ini-" . str_pad($i, 2, '0', STR_PAD_LEFT));
+    $line_labels[] = $i;
+    $res = mysqli_query($koneksi, "SELECT SUM(total) as total FROM transaksi WHERE DATE(tgl_transaksi) = '$tgl'");
+    $line_data[] = (float)(mysqli_fetch_assoc($res)['total'] ?? 0);
 }
 ?>
 
@@ -71,13 +76,13 @@ while ($row = mysqli_fetch_assoc($pendapatanHarian)) {
                     </div>
                 </div>
             </form>
-            <?php if (isset($_POST['filter'])): ?>
+            <hr>
                 <form method="post" action="laporanpendapatancetak.php" target="_blank" class="mt-3">
                     <input type="hidden" name="dari" value="<?= $dari ?>">
                     <input type="hidden" name="sampai" value="<?= $sampai ?>">
                     <button type="submit" class="btn btn-danger"><i class="fa fa-print"></i> Cetak PDF</button>
                 </form>
-            <?php endif; ?>
+            
         </div>
     </div>
     <div class="row">
@@ -88,7 +93,8 @@ while ($row = mysqli_fetch_assoc($pendapatanHarian)) {
                     <div class="ibox-title">Grafik Pendapatan Harian <?= $filter ? '(' . $filter . ')' : '' ?></div>
                 </div>
                 <div class="ibox-body">
-                    <canvas id="chartPendapatanHarian" height="100"></canvas>
+                    <canvas id="chartPendapatan" height="100"></canvas>
+                    <!-- <canvas id="chartPendapatanHarian" height="100"></canvas> -->
                 </div>
             </div>
         </div>
@@ -149,45 +155,57 @@ while ($row = mysqli_fetch_assoc($pendapatanHarian)) {
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('chartPendapatanHarian');
-    new Chart(ctx, {
+    // const ctx = document.getElementById('chartPendapatanHarian');
+    // new Chart(ctx, {
+    //     type: 'line',
+    //     data: {
+    //         labels: <?= json_encode($line_labels) ?>,
+    //         datasets: [{
+    //             label: 'Total Pendapatan',
+    //             data: <?= json_encode($line_data) ?>,
+    //             borderColor: 'rgba(75, 192, 192, 1)',
+    //             backgroundColor: 'rgba(75, 192, 192, 0.2)',
+    //             fill: true,
+    //             tension: 0.3
+    //         }]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top'
+    //             },
+    //             tooltip: {
+    //                 callbacks: {
+    //                     label: function(context) {
+    //                         let value = context.raw.toLocaleString('id-ID');
+    //                         return 'Rp ' + value;
+    //                     }
+    //                 }
+    //             }
+    //         },
+    //         scales: {
+    //             y: {
+    //                 beginAtZero: true,
+    //                 ticks: {
+    //                     callback: function(value) {
+    //                         return 'Rp ' + value.toLocaleString('id-ID');
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+    const chartPendapatan = new Chart(document.getElementById('chartPendapatan'), {
         type: 'line',
         data: {
             labels: <?= json_encode($line_labels) ?>,
             datasets: [{
-                label: 'Total Pendapatan',
+                label: 'Pendapatan',
                 data: <?= json_encode($line_data) ?>,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-                tension: 0.3
+                borderColor: '#007bff',
+                fill: false
             }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top'
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let value = context.raw.toLocaleString('id-ID');
-                            return 'Rp ' + value;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return 'Rp ' + value.toLocaleString('id-ID');
-                        }
-                    }
-                }
-            }
         }
     });
 </script>

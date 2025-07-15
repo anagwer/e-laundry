@@ -86,15 +86,14 @@ while ($b = mysqli_fetch_assoc($barang)) {
                 </div>
             </form>
 
-            <?php if ($showCetak): ?>
-                <form method="post" action="laporanstokcetak.php" target="_blank" class="mt-3">
-                    <input type="hidden" name="dari" value="<?= $dari ?>">
-                    <input type="hidden" name="sampai" value="<?= $sampai ?>">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fa fa-print"></i> Cetak PDF
-                    </button>
-                </form>
-            <?php endif; ?>
+            <hr>
+            <form method="post" action="laporanstokcetak.php" target="_blank" class="mt-3">
+                <input type="hidden" name="dari" value="<?= $dari ?>">
+                <input type="hidden" name="sampai" value="<?= $sampai ?>">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fa fa-print"></i> Cetak PDF
+                </button>
+            </form>
         </div>
     </div>
 

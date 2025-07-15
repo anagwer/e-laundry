@@ -93,21 +93,27 @@ if (isset($_POST['update'])) {
         $jenis_layanan_nama = $data_jenis['jenis_layanan'];
 
         // Simpan bahan berdasarkan jenis layanan
-        $bahan = [];
+        $barang = [];
         if ($jenis_layanan_nama == 'Cuci + Setrika') {
-            $bahan = ['Pewangi', 'Pelembut', 'Deterjen'];
+            $barang = ['Deterjen', 'Pelembut', 'Pewangi'];
+        } elseif ($jenis_layanan_nama === 'Handuk Kecil' || $jenis_layanan_nama === 'Jas' || $jenis_layanan_nama === 'Bed Cover Double') {
+            $barang = ['Deterjen', 'Pelembut', 'Pewangi', 'Plastik'];
+        } elseif ($jenis_layanan_nama === 'Bantal Kursi' || $jenis_layanan_nama === 'Bed Cover Single' || $jenis_layanan_nama === 'Bantal Besar') {
+            $barang = ['Deterjen', 'Pelembut', 'Pewangi', 'Plastik'];
+        } elseif ($jenis_layanan_nama === 'Sprei 1 Set' || $jenis_layanan_nama === 'Selimut' || $jenis_layanan_nama === 'Handuk Besar') {
+            $barang = ['Deterjen', 'Pelembut', 'Pewangi', 'Plastik'];
         } elseif ($jenis_layanan_nama == 'Hanya Cuci') {
-            $bahan = ['Pelembut', 'Deterjen'];
+            $barang = ['Deterjen', 'Pelembut'];
         } elseif ($jenis_layanan_nama == 'Setrika') {
-            $bahan = ['Pewangi'];
+            $barang = ['Pewangi'];
         }
 
         // Kembalikan stok lama
-        foreach ($bahan as $nama) {
+        foreach ($barang as $nama) {
             mysqli_query($koneksi, "UPDATE barang SET stock = stock + $berat_lama WHERE nm_barang = '$nama'");
         }
         // Kurangi stok baru
-        foreach ($bahan as $nama) {
+        foreach ($barang as $nama) {
             mysqli_query($koneksi, "UPDATE barang SET stock = stock - $berat_baru WHERE nm_barang = '$nama'");
         }
 
@@ -244,7 +250,7 @@ if (isset($_POST['update'])) {
 
                                 <div class="form-group">
                                     <label>Berat (kg)</label>
-                                    <input type="number" name="berat" id="berat" class="form-control" required min="1" value="<?= $data_transaksi['berat'] ?>">
+                                    <input type="number" name="berat" id="berat" class="form-control" required min="1" step="0.1" value="<?= $data_transaksi['berat'] ?>">
                                 </div>
 
                                 <div class="form-group">
@@ -335,15 +341,15 @@ if (isset($_POST['update'])) {
             'Cuci + Setrika': { 'Pewangi': 1, 'Pelembut': 1, 'Deterjen': 1 },
             'Hanya Cuci': { 'Pelembut': 1, 'Deterjen': 1 },
             'Setrika': { 'Pewangi': 1 },
-            'Bantal Kursi': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3 },
-            'Bed Cover Single': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3 },
-            'Bantal Besar': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3 },
-            'Bed Cover Double': { 'Pewangi': 4, 'Pelembut': 2, 'Deterjen': 4 },
-            'Sprei 1 Set': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2 },
-            'Selimut': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2 },
-            'Handuk Besar': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2 },
-            'Handuk Kecil': { 'Pewangi': 1, 'Pelembut': 1, 'Deterjen': 1 },
-            'Jas': { 'Pewangi': 1, 'Pelembut': 1, 'Deterjen': 1 }
+            'Bantal Kursi': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3, 'Plastik':1 },
+            'Bed Cover Single': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3, 'Plastik':1 },
+            'Bantal Besar': { 'Pewangi': 2, 'Pelembut': 1, 'Deterjen': 3, 'Plastik':1 },
+            'Bed Cover Double': { 'Pewangi': 4, 'Pelembut': 2, 'Deterjen': 4, 'Plastik':1 },
+            'Sprei 1 Set': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2, 'Plastik':1 },
+            'Selimut': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2, 'Plastik':1 },
+            'Handuk Besar': { 'Pewangi': 2, 'Pelembut': 2, 'Deterjen': 2, 'Plastik':1 },
+            'Handuk Kecil': { 'Pewangi': 1, 'Pelembut': 1, 'Deterjen': 1, 'Plastik':1 },
+            'Jas': { 'Pewangi': 1, 'Pelembut': 1, 'Deterjen': 1, 'Plastik':1 }
         };
 
         function updateTanggalSelesai(estimasi) {
