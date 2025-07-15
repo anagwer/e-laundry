@@ -72,8 +72,10 @@ while ($b = mysqli_fetch_assoc($bulanan)) {
 
             <hr>
             <form method="post" action="laporantotalordercetak.php" target="_blank" class="mt-3">
+                <?php if (isset($_POST['filter'])): ?>
                 <input type="hidden" name="dari" value="<?= $dari ?>">
                 <input type="hidden" name="sampai" value="<?= $sampai ?>">
+                <?php endif;?>
                 <button type="submit" class="btn btn-danger">
                     <i class="fa fa-print"></i> Cetak PDF
                 </button>

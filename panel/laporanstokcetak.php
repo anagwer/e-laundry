@@ -5,92 +5,69 @@ require_once '../vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+// Ambil data dari POST
 $dari = $_POST['dari'] ?? '';
 $sampai = $_POST['sampai'] ?? '';
 
-$filter = '';
+$wheremasuk = '';
+$wherekeluar = '';
+// Filter laporan
+$filter = 'Semua Data';
 if ($dari && $sampai) {
     $filter = "Periode: " . date('d-m-Y', strtotime($dari)) . " s/d " . date('d-m-Y', strtotime($sampai));
+    $wheremasuk = "WHERE DATE(bm.tgl_masuk) BETWEEN '$dari' AND '$sampai'";
+    $wherekeluar = "WHERE DATE(bk.tgl_keluar) BETWEEN '$dari' AND '$sampai'";
 }
 
-// Barang Masuk
+// Query Barang Masuk
 $masukList = [];
 $qMasuk = mysqli_query($koneksi, "
     SELECT bm.tgl_masuk, bm.jml_masuk, b.nm_barang 
     FROM barang_masuk bm 
     JOIN barang b ON bm.id_barang = b.id_barang 
-    WHERE DATE(bm.tgl_masuk) BETWEEN '$dari' AND '$sampai'
+    $wheremasuk
     ORDER BY bm.tgl_masuk ASC
 ");
 while ($row = mysqli_fetch_assoc($qMasuk)) {
     $masukList[] = $row;
 }
 
-// Barang Keluar
+// Query Barang Keluar
 $keluarList = [];
 $qKeluar = mysqli_query($koneksi, "
     SELECT bk.tgl_keluar, bk.jml_keluar, b.nm_barang 
     FROM barang_keluar bk 
     JOIN barang b ON bk.id_barang = b.id_barang 
-    WHERE DATE(bk.tgl_keluar) BETWEEN '$dari' AND '$sampai'
+    $wherekeluar
     ORDER BY bk.tgl_keluar ASC
 ");
 while ($row = mysqli_fetch_assoc($qKeluar)) {
     $keluarList[] = $row;
 }
 
-// Stok Saat Ini
+// Query Stok Saat Ini
 $stokList = [];
 $qStok = mysqli_query($koneksi, "SELECT nm_barang, stock FROM barang ORDER BY nm_barang");
 while ($row = mysqli_fetch_assoc($qStok)) {
     $stokList[] = $row;
 }
 
-// Output HTML
+// Mulai output buffering
 ob_start();
 ?>
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Laporan Stok Barang</title>
     <style>
-        body {
-            font-family: sans-serif;
-            font-size: 12px;
-        }
-
-        h2,
-        h4 {
-            text-align: center;
-            margin: 0;
-        }
-
-        .section {
-            margin-top: 30px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 6px;
-            text-align: center;
-        }
-
-        .footer {
-            margin-top: 20px;
-            text-align: right;
-            font-size: 11px;
-        }
+        body { font-family: sans-serif; font-size: 12px; }
+        h2, h4 { text-align: center; margin: 0; }
+        .section { margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 6px; text-align: center; }
+        .footer { margin-top: 20px; text-align: right; font-size: 11px; }
     </style>
 </head>
-
 <body>
     <h2>Laporan Stok Barang</h2>
     <h4><?= $filter ?></h4>
@@ -107,8 +84,7 @@ ob_start();
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1;
-                foreach ($masukList as $m): ?>
+                <?php $no = 1; foreach ($masukList as $m): ?>
                     <tr>
                         <td><?= $no++ ?></td>
                         <td><?= htmlspecialchars($m['nm_barang']) ?></td>
@@ -132,8 +108,7 @@ ob_start();
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1;
-                foreach ($keluarList as $k): ?>
+                <?php $no = 1; foreach ($keluarList as $k): ?>
                     <tr>
                         <td><?= $no++ ?></td>
                         <td><?= htmlspecialchars($k['nm_barang']) ?></td>
@@ -156,8 +131,7 @@ ob_start();
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1;
-                foreach ($stokList as $s): ?>
+                <?php $no = 1; foreach ($stokList as $s): ?>
                     <tr>
                         <td><?= $no++ ?></td>
                         <td><?= htmlspecialchars($s['nm_barang']) ?></td>
@@ -172,17 +146,21 @@ ob_start();
         Dicetak pada: <?= date('d-m-Y H:i') ?>
     </div>
 </body>
-
 </html>
 <?php
+// Simpan dan bersihkan buffer
 $html = ob_get_clean();
 
-// DOMPDF
+// Inisialisasi DOMPDF
 $options = new Options();
 $options->set('isRemoteEnabled', true);
 $dompdf = new Dompdf($options);
+
+// Render PDF
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
+
+// Tampilkan ke browser
 $dompdf->stream("Laporan_Stok_Barang.pdf", ["Attachment" => false]);
 exit;

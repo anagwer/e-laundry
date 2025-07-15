@@ -78,9 +78,13 @@ for ($i = 1; $i <= $days_in_month; $i++) {
             </form>
             <hr>
                 <form method="post" action="laporanpendapatancetak.php" target="_blank" class="mt-3">
-                    <input type="hidden" name="dari" value="<?= $dari ?>">
-                    <input type="hidden" name="sampai" value="<?= $sampai ?>">
-                    <button type="submit" class="btn btn-danger"><i class="fa fa-print"></i> Cetak PDF</button>
+                    <?php if (isset($_POST['filter'])): ?>
+                        <input type="hidden" name="dari" value="<?= $dari ?>">
+                        <input type="hidden" name="sampai" value="<?= $sampai ?>">
+                    <?php endif; ?>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-print"></i> Cetak PDF
+                    </button>
                 </form>
             
         </div>

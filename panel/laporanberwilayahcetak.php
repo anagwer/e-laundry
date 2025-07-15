@@ -18,14 +18,24 @@ if ($dari && $sampai) {
 }
 
 // Ambil data rekap transaksi berdasarkan kecamatan
+if($where == ''){
 $query = "
     SELECT p.kecamatan, COUNT(DISTINCT t.id_pelanggan) as total_pelanggan
     FROM transaksi t
     JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
-    $where
     GROUP BY p.kecamatan
     ORDER BY total_pelanggan DESC
 ";
+}else{
+    $query = "
+        SELECT p.kecamatan, COUNT(DISTINCT t.id_pelanggan) as total_pelanggan
+        FROM transaksi t
+        JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
+        $where
+        GROUP BY p.kecamatan
+        ORDER BY total_pelanggan DESC
+    ";
+}
 $result = mysqli_query($koneksi, $query);
 
 if (!$result || mysqli_num_rows($result) === 0) {

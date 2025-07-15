@@ -88,8 +88,10 @@ while ($b = mysqli_fetch_assoc($barang)) {
 
             <hr>
             <form method="post" action="laporanstokcetak.php" target="_blank" class="mt-3">
+                <?php if (isset($_POST['filter'])): ?>
                 <input type="hidden" name="dari" value="<?= $dari ?>">
                 <input type="hidden" name="sampai" value="<?= $sampai ?>">
+                <?php endif;?>
                 <button type="submit" class="btn btn-danger">
                     <i class="fa fa-print"></i> Cetak PDF
                 </button>
@@ -137,8 +139,8 @@ while ($b = mysqli_fetch_assoc($barang)) {
                                 </td>
                             </tr>
                         <?php 
-                        $ttlkeluar = $ttlkeluar +$row['total_masuk'];
-                        $ttlmasuk = $ttlmasuk + $row['total_keluar'];
+                        $ttlmasuk = $ttlmasuk +$row['total_masuk'];
+                        $ttlkeluar = $ttlkeluar + $row['total_keluar'];
                         $ttlstok = $ttlstok + $row['stok'];
                         endforeach ?>
                     </tbody>

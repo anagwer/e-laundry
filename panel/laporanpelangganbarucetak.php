@@ -5,18 +5,22 @@ require_once '../vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-$dari   = $_POST['dari'] ?? '';
+$dari = $_POST['dari'] ?? '';
 $sampai = $_POST['sampai'] ?? '';
 
-if (!$dari || !$sampai) {
-    die("Tanggal tidak valid.");
+// Tentukan kondisi WHERE
+$where = '';
+$judulPeriode = "Semua Data";
+if ($dari && $sampai) {
+    $where = "WHERE DATE(tgl_daftar) BETWEEN '$dari' AND '$sampai'";
+    $judulPeriode = "Periode: " . date('d-m-Y', strtotime($dari)) . " s/d " . date('d-m-Y', strtotime($sampai));
 }
 
-// Ambil data pelanggan berdasarkan periode
+// Ambil data pelanggan
 $query = mysqli_query($koneksi, "
     SELECT DATE(tgl_daftar) as tanggal, COUNT(*) as jumlah
-    FROM pelanggan
-    WHERE DATE(tgl_daftar) BETWEEN '$dari' AND '$sampai'
+    FROM user
+    $where
     GROUP BY DATE(tgl_daftar)
     ORDER BY tanggal ASC
 ");
@@ -36,8 +40,7 @@ ob_start();
             font-size: 12px;
         }
 
-        h2,
-        h4 {
+        h2, h4 {
             text-align: center;
             margin: 0;
         }
@@ -48,8 +51,7 @@ ob_start();
             margin-top: 20px;
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid #000;
             padding: 6px;
             text-align: center;
@@ -66,7 +68,7 @@ ob_start();
 <body>
 
     <h2>Laporan Pelanggan Baru</h2>
-    <h4>Periode: <?= date('d-m-Y', strtotime($dari)) ?> s/d <?= date('d-m-Y', strtotime($sampai)) ?></h4>
+    <h4><?= $judulPeriode ?></h4>
 
     <table>
         <thead>
@@ -114,5 +116,6 @@ $dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
-$dompdf->stream("Laporan_Pelanggan_Baru_{$dari}_sd_{$sampai}.pdf", ["Attachment" => false]);
+$filename = $dari && $sampai ? "Laporan_Pelanggan_{$dari}_sd_{$sampai}.pdf" : "Laporan_Pelanggan_Semua_Data.pdf";
+$dompdf->stream($filename, ["Attachment" => false]);
 exit;
