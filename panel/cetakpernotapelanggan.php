@@ -13,15 +13,14 @@ if (!$tanggal) {
 
 // Ambil pelanggan yang daftar pada tanggal tersebut
 $pelanggan = mysqli_query($koneksi, "
-    SELECT id_pelanggan, nm_pelanggan 
+    SELECT  nm_user as nm_pelanggan
     FROM user
-    JOIN pelanggan ON user.id_user = pelanggan.id_user 
-    WHERE DATE(tgl_daftar) = '$tanggal'
+    WHERE tgl_daftar = '$tanggal'
 ");
 
 $idList = [];
 while ($p = mysqli_fetch_assoc($pelanggan)) {
-    $idList[] = $p['id_pelanggan'];
+    $idList[] = $p['nm_pelanggan'];
 }
 
 // Jika tidak ada pelanggan
@@ -34,13 +33,10 @@ $idIn = implode(',', $idList);
 
 // Ambil transaksi dari pelanggan-pelanggan tersebut
 $transaksi = mysqli_query($koneksi, "
-   SELECT t.id_transaksi, t.tgl_transaksi, p.nm_pelanggan, t.total
-
-    FROM transaksi t
-    JOIN pelanggan p ON t.id_pelanggan = p.id_pelanggan
-    JOIN user u ON p.id_user = u.id_user
-    WHERE t.id_pelanggan IN ($idIn)
-    ORDER BY t.tgl_transaksi ASC
+    SELECT nm_user as nm_pelanggan, DATE(tgl_daftar) as tanggal, COUNT(*) as jumlah
+    FROM user
+    WHERE tgl_daftar = '$tanggal'
+    ORDER BY tgl_daftar DESC
 ");
 
 // Siapkan output HTML
@@ -86,17 +82,14 @@ ob_start();
 </head>
 
 <body>
-    <h2>Laporan Transaksi Pelanggan Baru</h2>
-    <h4>Tanggal Pendaftaran: <?= date('d-m-Y', strtotime($tanggal)) ?></h4>
+    <h2>Laporan Data Pelanggan Baru</h2>
+    <h4>Tanggal Pendaftaran: <?= date('d-m-Y', strtotime($tanggal)); ?></h4>
 
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>ID Transaksi</th>
                 <th>Nama Pelanggan</th>
-                <th>Tanggal Transaksi</th>
-                <th>Total Bayar</th>
             </tr>
         </thead>
         <tbody>
@@ -104,19 +97,16 @@ ob_start();
             $no = 1;
             $total = 0;
             while ($row = mysqli_fetch_assoc($transaksi)) :
-                $total += $row['total'];
+                $total++;
             ?>
                 <tr>
                     <td><?= $no++ ?></td>
-                    <td><?= $row['id_transaksi'] ?></td>
                     <td><?= $row['nm_pelanggan'] ?></td>
-                    <td><?= date('d-m-Y', strtotime($row['tgl_transaksi'])) ?></td>
-                    <td>Rp <?= number_format($row['total'], 0, ',', '.') ?></td>
                 </tr>
             <?php endwhile; ?>
             <tr>
-                <td colspan="4" style="text-align:right"><strong>Total</strong></td>
-                <td><strong>Rp <?= number_format($total, 0, ',', '.') ?></strong></td>
+                <td style="text-align:right"><strong>Total</strong></td>
+                <td><strong><?php echo $total ?></strong></td>
             </tr>
         </tbody>
     </table>

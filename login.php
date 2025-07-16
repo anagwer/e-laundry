@@ -99,7 +99,7 @@
 
         if ($user) {
             if (password_verify($password, $user['password'])) {
-                session_start();
+                // session_start();
                 $_SESSION['user'] = $user;
                 echo "<script>alert('Login Berhasil'); window.location = 'panel/index.php';</script>";
             } else {
