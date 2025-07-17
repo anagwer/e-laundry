@@ -216,103 +216,113 @@ function getStatusBadge($status, $type = 'bayar')
                         </div>
                     </div>
 
-                    <?php if ($_SESSION['user']['level_akses'] == 'Admin'): 
-    // Ambil jenis layanan dari data_transaksi
-    $jenis_layanan = $data_transaksi['jenis_layanan'];
-?>
-    <!-- KEBUTUHAN BARANG -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
-                    <h6 class="mb-0"><i class="fas fa-cubes me-2"></i>Kebutuhan Barang</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
+                    <?php
+                if ($_SESSION['user']['level_akses'] == 'Admin'):
 
-                        <?php if ($jenis_layanan == 'Cuci + Setrika') : ?>
-                            <!-- Pewangi -->
-                            <div class="col-md-4">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <i class="la la-flask text-primary" style="font-size: 48px;"></i>
-                                        <h4>Pewangi</h4>
-                                        <h3 class="text-primary"><?= $data_transaksi['berat'] ?> Liter</h3>
-                                    </div>
+                    $jenis_layanan = $data_transaksi['jenis_layanan'];
+                    $berat = ceil($data_transaksi['berat']); // dibulatkan ke atas
+                    $kebutuhan = [];
+
+                    switch ($jenis_layanan) {
+                        case 'Cuci + Setrika':
+                            $kebutuhan = [
+                                'Pewangi' => ['jumlah' => $berat * 1, 'satuan' => 'Tutup botol', 'ikon' => 'la-flask', 'warna' => 'primary'],
+                                'Pelembut' => ['jumlah' => $berat * 1, 'satuan' => 'Tutup botol', 'ikon' => 'la-tint', 'warna' => 'success'],
+                                'Deterjen' => ['jumlah' => $berat * 1, 'satuan' => 'Sendok', 'ikon' => 'la-soap', 'warna' => 'warning'],
+                            ];
+                            break;
+
+                        case 'Hanya Cuci':
+                            $kebutuhan = [
+                                'Pelembut' => ['jumlah' => $berat * 1, 'satuan' => 'Tutup botol', 'ikon' => 'la-tint', 'warna' => 'success'],
+                                'Deterjen' => ['jumlah' => $berat * 1, 'satuan' => 'Sendok', 'ikon' => 'la-soap', 'warna' => 'warning'],
+                            ];
+                            break;
+
+                        case 'Setrika':
+                            $kebutuhan = [
+                                'Pewangi' => ['jumlah' => $berat * 1, 'satuan' => 'Tutup botol', 'ikon' => 'la-flask', 'warna' => 'primary'],
+                            ];
+                            break;
+
+                        case 'Handuk Kecil':
+                        case 'Jas':
+                            $kebutuhan = [
+                                'Pewangi' => ['jumlah' => $berat * 1, 'satuan' => 'Tutup botol', 'ikon' => 'la-flask', 'warna' => 'primary'],
+                                'Pelembut' => ['jumlah' => $berat * 1, 'satuan' => 'Tutup botol', 'ikon' => 'la-tint', 'warna' => 'success'],
+                                'Deterjen' => ['jumlah' => $berat * 1, 'satuan' => 'Sendok', 'ikon' => 'la-soap', 'warna' => 'warning'],
+                                'Plastik' => ['jumlah' => $berat * 1, 'satuan' => 'Lembar', 'ikon' => 'la-box', 'warna' => 'dark'],
+                            ];
+                            break;
+
+                        case 'Bantal Kursi':
+                        case 'Bed Cover Single':
+                        case 'Bantal Besar':
+                            $kebutuhan = [
+                                'Pewangi' => ['jumlah' => $berat * 2, 'satuan' => 'Tutup botol', 'ikon' => 'la-flask', 'warna' => 'primary'],
+                                'Pelembut' => ['jumlah' => $berat * 1, 'satuan' => 'Tutup botol', 'ikon' => 'la-tint', 'warna' => 'success'],
+                                'Deterjen' => ['jumlah' => $berat * 3, 'satuan' => 'Sendok', 'ikon' => 'la-soap', 'warna' => 'warning'],
+                                'Plastik' => ['jumlah' => $berat * 1, 'satuan' => 'Lembar', 'ikon' => 'la-box', 'warna' => 'dark'],
+                            ];
+                            break;
+
+                        case 'Bed Cover Double':
+                            $kebutuhan = [
+                                'Pewangi' => ['jumlah' => $berat * 4, 'satuan' => 'Tutup botol', 'ikon' => 'la-flask', 'warna' => 'primary'],
+                                'Pelembut' => ['jumlah' => $berat * 2, 'satuan' => 'Tutup botol', 'ikon' => 'la-tint', 'warna' => 'success'],
+                                'Deterjen' => ['jumlah' => $berat * 4, 'satuan' => 'Sendok', 'ikon' => 'la-soap', 'warna' => 'warning'],
+                                'Plastik' => ['jumlah' => $berat * 1, 'satuan' => 'Lembar', 'ikon' => 'la-box', 'warna' => 'dark'],
+                            ];
+                            break;
+
+                        case 'Sprei 1 Set':
+                        case 'Selimut':
+                        case 'Handuk Besar':
+                            $kebutuhan = [
+                                'Pewangi' => ['jumlah' => $berat * 2, 'satuan' => 'Tutup botol', 'ikon' => 'la-flask', 'warna' => 'primary'],
+                                'Pelembut' => ['jumlah' => $berat * 2, 'satuan' => 'Tutup botol', 'ikon' => 'la-tint', 'warna' => 'success'],
+                                'Deterjen' => ['jumlah' => $berat * 2, 'satuan' => 'Sendok', 'ikon' => 'la-soap', 'warna' => 'warning'],
+                                'Plastik' => ['jumlah' => $berat * 1, 'satuan' => 'Lembar', 'ikon' => 'la-box', 'warna' => 'dark'],
+                            ];
+                            break;
+
+                        default:
+                            $kebutuhan = [];
+                            break;
+                    }
+                ?>
+                <!-- KEBUTUHAN BARANG -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-dark text-white">
+                                <h6 class="mb-0"><i class="fas fa-cubes me-2"></i>Kebutuhan Barang</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <?php if (count($kebutuhan) > 0): ?>
+                                        <?php foreach ($kebutuhan as $nama => $data): ?>
+                                            <div class="col-md-3 mb-3">
+                                                <div class="card bg-light h-100">
+                                                    <div class="card-body">
+                                                        <i class="la <?= $data['ikon'] ?> text-<?= $data['warna'] ?>" style="font-size: 48px;"></i>
+                                                        <h4><?= $nama ?></h4>
+                                                        <h3 class="text-<?= $data['warna'] ?>"><?= $data['jumlah'] ?> <?= $data['satuan'] ?></h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <div class="col-md-12">
+                                            <div class="alert alert-info text-center">Tidak ada bahan diperlukan.</div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
-
-                            <!-- Pelembut -->
-                            <div class="col-md-4">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <i class="la la-tint text-success" style="font-size: 48px;"></i>
-                                        <h4>Pelembut</h4>
-                                        <h3 class="text-success"><?= $data_transaksi['berat'] ?> Liter</h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Deterjen -->
-                            <div class="col-md-4">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <i class="la la-soap text-warning" style="font-size: 48px;"></i>
-                                        <h4>Deterjen</h4>
-                                        <h3 class="text-warning"><?= $data_transaksi['berat'] ?> Liter</h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                        <?php elseif ($jenis_layanan == 'Hanya Cuci') : ?>
-
-                            <!-- Pelembut -->
-                            <div class="col-md-4">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <i class="la la-tint text-success" style="font-size: 48px;"></i>
-                                        <h4>Pelembut</h4>
-                                        <h3 class="text-success"><?= $data_transaksi['berat'] ?> Liter</h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Deterjen -->
-                            <div class="col-md-4 offset-md-2">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <i class="la la-soap text-warning" style="font-size: 48px;"></i>
-                                        <h4>Deterjen</h4>
-                                        <h3 class="text-warning"><?= $data_transaksi['berat'] ?> Liter</h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                        <?php elseif ($jenis_layanan == 'Setrika') : ?>
-
-                            <!-- Pewangi -->
-                            <div class="col-md-4 offset-md-4">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <i class="la la-flask text-primary" style="font-size: 48px;"></i>
-                                        <h4>Pewangi</h4>
-                                        <h3 class="text-primary"><?= $data_transaksi['berat'] ?> Liter</h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                        <?php else: ?>
-                            <div class="col-md-12">
-                                <div class="alert alert-info text-center">Tidak ada bahan diperlukan.</div>
-                            </div>
-                        <?php endif; ?>
-
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
+                <?php endif; ?>
 
                 </div>
             </div>
